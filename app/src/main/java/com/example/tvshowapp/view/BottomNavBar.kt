@@ -16,12 +16,12 @@ sealed class BottomNavItem(val label: String, val icon: ImageVector) {
 }
 
 @Composable
-fun BottomNavBar(current: String, onItemClick: (String) -> Unit) {
+fun BottomNavBar(current: String, onItemClick: (String) -> Unit, isDarkTheme: Boolean) {
     val items = listOf(BottomNavItem.Home, BottomNavItem.Search, BottomNavItem.Watchlist)
 
     NavigationBar(
-        containerColor = Color(0xFF0F1115), // 🟦 Fond sombre
-        contentColor = Color.White // ⚪ Icônes + texte blancs
+        containerColor = if (isDarkTheme) Color(0xFF0F1115) else Color.White,
+        contentColor = if (isDarkTheme) Color.White else Color.Black
     ) {
         items.forEach { item ->
             NavigationBarItem(
@@ -31,19 +31,17 @@ fun BottomNavBar(current: String, onItemClick: (String) -> Unit) {
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.label,
-                        tint = Color.White
+                        tint = if (isDarkTheme) Color.White else Color.Black
                     )
                 },
                 label = {
-                    Text(
-                        item.label,
-                        color = Color.White
-                    )
+                    Text(item.label, color = if (isDarkTheme) Color.White else Color.Black)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color(0xFF1C1E24) // Couleur d’indicateur sélectionné
+                    indicatorColor = if (isDarkTheme) Color(0xFF1C1E24) else Color(0xFFE0E0E0)
                 )
             )
         }
     }
 }
+

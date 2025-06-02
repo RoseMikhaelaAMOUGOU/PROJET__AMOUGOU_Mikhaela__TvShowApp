@@ -5,15 +5,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.tvshowapp.viewmodel.TvShowViewModel
 import com.example.tvshowapp.model.data.TvShow
-import com.example.tvshowapp.view.BottomNavBar
-import com.example.tvshowapp.view.TopBar
-import com.example.tvshowapp.view.TvShowGrid
 
 @Composable
-fun TvShowListScreen(viewModel: TvShowViewModel = viewModel()) {
+fun TvShowListScreen(
+    navController: NavController,
+    viewModel: TvShowViewModel = viewModel(),
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
+) {
     val tvShows by viewModel.tvShows.collectAsState()
     var selectedTab by remember { mutableStateOf("Home") }
 
@@ -22,25 +26,46 @@ fun TvShowListScreen(viewModel: TvShowViewModel = viewModel()) {
     }
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { TopBar(isDarkTheme = isDarkTheme, onToggleTheme = onToggleTheme) },
         bottomBar = {
-            BottomNavBar(current = selectedTab, onItemClick = { selectedTab = it })
-        }
+            BottomNavBar(
+                current = selectedTab,
+                onItemClick = { selectedTab = it },
+                isDarkTheme = isDarkTheme
+            )
+        },
+        containerColor = if (isDarkTheme) Color(0xFF0F1115) else Color.White
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             when (selectedTab) {
-                "Home" -> TvShowGrid(tvShows)
-                "Search" -> CenterText("Search Coming Soon")
-                "Watchlist" -> CenterText("Your Watchlist is empty")
+                "Home" -> TvShowGrid(
+                    tvShows = tvShows,
+                    onClick = { selected: TvShow ->
+                        navController.navigate("details/${selected.id}")
+                    },
+                    isDarkTheme = isDarkTheme
+                )
+
+                "Search" -> CenterText("Search Coming Soon", isDarkTheme)
+                "Watchlist" -> CenterText("Your Watchlist is empty", isDarkTheme)
             }
         }
     }
 }
 
 @Composable
-fun CenterText(text: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = text)
+fun CenterText(text: String, isDarkTheme: Boolean) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = if (isDarkTheme) Color.White else Color.Black
+        )
     }
 }
+
+
+
 
