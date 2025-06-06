@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -27,24 +29,27 @@ android {
             )
         }
     }
+
+    // ✅ Coherence Java 17
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.5"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // ✅ Bloc kotlinOptions unique
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.5"
+    }
 }
+
 
 dependencies {
 
@@ -64,8 +69,36 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     // Jetpack Compose
-    implementation ("androidx.compose.ui:ui:1.5.4")
-    implementation ("androidx.compose.material:material:1.5.4")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.5.4")
-    implementation ("androidx.activity:activity-compose:1.8.0")
+    implementation ("androidx.compose.ui:ui:1.8.2")
+    implementation ("androidx.compose.material:material:1.8.2")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.8.2")
+    implementation ("androidx.activity:activity-compose:1.10.1")
+
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.49")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation("com.google.code.gson:gson:2.11.0")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0")
+    implementation("androidx.activity:activity-ktx:1.10.1")
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
+    //Icons
+    implementation("androidx.compose.material:material-icons-extended")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+
 }
